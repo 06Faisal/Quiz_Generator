@@ -101,7 +101,10 @@ body {
     padding: 32px;
 }
 
-.field + .field-row, .field + .field { margin-top: 28px; }
+/* Spacing between stacked blocks in the composer only — the two fields inside
+   .field-row are grid siblings and must stay top-aligned. */
+.composer > .field + .field-row,
+.composer > .field + .field { margin-top: 28px; }
 
 .field label {
     display: flex;
