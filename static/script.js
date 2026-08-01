@@ -12,20 +12,19 @@ slider.addEventListener("input", () => {
 });
 
 // --- Error handling ---
+let errorTimer;
+
 function showError(message) {
     const toast = document.getElementById("error-toast");
-    const msgEl = document.getElementById("error-message");
-    msgEl.textContent = message;
-    toast.style.display = "flex";
+    document.getElementById("error-message").textContent = message;
+    toast.classList.remove("is-hidden");
 
-    // Auto-hide after 8 seconds
-    setTimeout(() => {
-        toast.style.display = "none";
-    }, 8000);
+    clearTimeout(errorTimer);
+    errorTimer = setTimeout(hideError, 8000);
 }
 
 function hideError() {
-    document.getElementById("error-toast").style.display = "none";
+    document.getElementById("error-toast").classList.add("is-hidden");
 }
 
 // --- Toggle loading state ---
@@ -35,8 +34,8 @@ function setLoading(loading) {
     const btnLoader = btn.querySelector(".btn-loader");
 
     btn.disabled = loading;
-    btnText.style.display = loading ? "none" : "flex";
-    btnLoader.style.display = loading ? "flex" : "none";
+    btnText.classList.toggle("is-hidden", loading);
+    btnLoader.classList.toggle("is-hidden", !loading);
 }
 
 // --- Generate Quiz ---
@@ -87,6 +86,8 @@ async function generateQuiz() {
 // --- Render Quiz ---
 function renderQuiz(questions, topic, difficulty) {
     const results = document.getElementById("results");
+
+    document.getElementById("docket-sheet").textContent = topic;
 
     // Header
     const header = document.createElement("div");
@@ -154,7 +155,9 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// --- Allow Enter key to submit ---
+// --- Wiring ---
+document.getElementById("generate-btn").addEventListener("click", generateQuiz);
+
 document.getElementById("topic").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         generateQuiz();
